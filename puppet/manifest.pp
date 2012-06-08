@@ -1,3 +1,5 @@
+$apache2_mods = "/etc/apache2/mods"
+
 class apache {
   exec { 'apt-get update':
     command => '/usr/bin/apt-get update'
@@ -33,6 +35,11 @@ class apache {
     require => File["/etc/apache2/sites-enabled/project.conf"],
     notify => Service["apache2"]
   }
+  
+  exec { "/usr/sbin/a2enmod rewrite":
+    unless => "/bin/readlink -e /etc/apache2/mods-enabled/rewrite.load",
+    notify  => Service["apache2"],
+  }  
 }
 
 class php {
@@ -75,6 +82,13 @@ class mysql {
 class groups {
   group { "puppet":
       ensure => present,
+  } 
+}
+
+class users {
+  user { "www-data":
+    groups => ["vagrant"],
+    notify  => Service["apache2"],
   }
 }
 
@@ -82,3 +96,4 @@ include apache
 include php
 include mysql
 include groups
+include users
