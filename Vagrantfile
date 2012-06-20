@@ -7,7 +7,7 @@ Vagrant::Config.run do |config|
   config.vm.share_folder("v-root", "/vagrant", ".", :owner => "www-data", :group => "vagrant")
   
   # gui will help debug
-  config.vm.boot_mode = :gui
+  #config.vm.boot_mode = :gui
   
   # network setup
   config.vm.network :hostonly, "33.33.33.33"
