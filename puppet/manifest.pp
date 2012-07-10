@@ -44,6 +44,7 @@ class apache {
 
 class libs {
   package { "imagemagick":          ensure => present }
+  package { "curl":                 ensure => present }
 }
 
 class php {
@@ -52,6 +53,7 @@ class php {
   package { "php5-mysql":           ensure => present }
   package { "libapache2-mod-php5":  ensure => present }
   package { "php5-imagick":         ensure => present, require => Package["imagemagick"] }
+  package { "php5-curl":            ensure => present, require => Package["curl"] }
 }
 
 class mysql {
