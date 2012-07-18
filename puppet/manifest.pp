@@ -1,5 +1,3 @@
-$apache2_mods = "/etc/apache2/mods"
-
 class apache {
   exec { 'apt-get update':
     command => '/usr/bin/apt-get update'
@@ -39,7 +37,7 @@ class apache {
   exec { "/usr/sbin/a2enmod rewrite":
     unless => "/bin/readlink -e /etc/apache2/mods-enabled/rewrite.load",
     notify  => Service["apache2"],
-  }  
+  } 
 }
 
 class libs {
@@ -54,6 +52,18 @@ class php {
   package { "libapache2-mod-php5":  ensure => present }
   package { "php5-imagick":         ensure => present, require => Package["imagemagick"] }
   package { "php5-curl":            ensure => present, require => Package["curl"] }
+  package { "php5-intl":            ensure => present }
+  package { "php5-sqlite":          ensure => present }
+  package { "php-apc":              ensure => present }
+  
+  file { ["/etc/php5/apache2/php.ini", "/etc/php5/cli/php.ini"]:
+    require => Package["php5"],
+    ensure => file,
+    owner => root,
+    group => root,
+    mode => 0644,
+    source => "/vagrant/puppet/php.ini",
+  }
 }
 
 class mysql {
